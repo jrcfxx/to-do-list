@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('task_change', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('task_id');
             $table->dateTime('change_date', 0);
             $table->longText('change_content');
             $table->timestamps();
@@ -24,6 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        $table->dropForeign(['task_id']);
         Schema::dropIfExists('task_change');
     }
 };
