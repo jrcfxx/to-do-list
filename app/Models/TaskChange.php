@@ -27,7 +27,8 @@ class TaskChange extends Model
     protected $fillable = [
         'task_id',
         'change_date',
-        'change_content',
+        'changed_field',
+        'changed_content',
     ];
 
     /*  This function defines that a TaskChange is associated with one specific Task  */

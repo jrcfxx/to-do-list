@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('task_change', function (Blueprint $table) {
             $table->id();
             $table->dateTime('change_date', 0);
-            $table->longText('change_content');
+            $table->longText('changed_field');
+            $table->longText('changed_content');
             $table->timestamps();
         });
     }
