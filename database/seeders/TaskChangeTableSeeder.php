@@ -23,9 +23,9 @@ class TaskChangeTableSeeder extends Seeder
             [
                 'id' => 1,
                 'task_id' => 1,
-                'change_date' => Carbon::createFromFormat('d/m/Y', '15/07/2024')->format('Y-m-d'),
                 'changed_field' => 'testing',
-                'changed_content' => 'testing',
+                'old_value' => 'testing',
+                'new_value' => 'testing',
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
             ]

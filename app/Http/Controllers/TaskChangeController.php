@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\TaskChange;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class TaskChangeController extends Controller
 {
+
+    public function __construct(private TaskChange $taskChange) 
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,39 +26,42 @@ class TaskChangeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Creating a new record in the database.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
+         // Validator::make(): Laravel Facade Validator static method - creating a new validator.
+        // Creates a new instance of a validator for the request data
+        $validator = Validator::make($request->all(), [
             'task_id' => 'sometimes|required|exists:task,id',
-            'change_date' => 'required|date',
-            'changed_field' => 'required',
-            'changed_content' => 'required',
+            'changed_field' => 'required|string',
+            'old_value' => 'required|string',
+            'new_value' => 'required|string',
         ]);
 
-         return TaskChange::create([
-            'task_id' => $request->name,
-            'change_date' => $request->change_date,
-            'changed_field' => $request->changed_field,
-            'changed_content' => $request->changed_content,
-         ]);
+        // Returns true if validation fails and false if it passes. Checks that the data provided does not meet the defined validation rules
+        if ($validator->fails()) {
 
-
-        return response()->json($taskchange, 201);
+            // If the validation fails, it returns a JSON response with an error message and the status HTTP 400 (Bad Request).
+            // 'messages' => $validator->errors(): The detailed error messages provided by the validator. 
+            // errors() returns an associative array with fields that failed validation and their error messages.
+            return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
+        } else {
+            try {
+                // All database operations after this line will be treated as a single work unit.
+                DB::beginTransaction();
+                $taskChange = $this->$taskChange->create($request->all());
+                // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
+                DB::commit();
+                return response()->json($taskChange,201);
+            } catch (Exception $e) {
+                // Rollback the transaction
+                DB::rollBack();
+                return response()->json(['message' => 'Internal Error'], 500);
+            }
+        }
     }
 
     /**
@@ -59,20 +70,27 @@ class TaskChangeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $taskchange)
+    public function show(int $id)
     {
-        return response()->json($taskchange);
-    }
+        // Validator::make(): Laravel Facade Validator static method - creating a new validator.
+        // Creates a new instance of a validator for the request data
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|integer'
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        // Returns true if validation fails and false if it passes. Checks that the data provided does not meet the defined validation rules
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
+        } else {
+            try {
+                $taskChange = Task::findOrFail($id);
+                return response()->json($task, 200);
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['message' => 'TaskChange not found'], 404);
+            } catch (Exception $e) {
+                return response()->json(['message' => 'Internal Error'], 500);
+            }
+        }
     }
 
     /**
@@ -82,29 +100,37 @@ class TaskChangeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TaskChange $taskchange)
+    public function update(Request $request, int $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'task_id' => 'sometimes|required|exists:task,id',
-            'change_date' => 'required|date',
-            'changed_field' => 'required',
-            'changed_content' => 'required',
-        ]);  
+            'changed_field' => 'required|string',
+            'old_value' => 'required|string',
+            'new_value' => 'required|string',
+        ]);
 
-        $taskchange->update($request->all());
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
+        } else {
+            DB::beginTransaction();
+        try {
+            $taskChange = Task::findOrFail($id);
+            $taskChange->update($request->all());
 
-        return response()->json($taskchange);
+            DB::commit();
+            return response()->json($taskChange, 200);
+
+        } catch (ModelNotFoundException $e) {
+
+            DB::rollBack();
+            return response()->json(['message' => 'TaskChange not found'], 404);
+
+        } catch (Exception $e) {
+
+            DB::rollBack();
+            return response()->json(['message' => 'Internal Error'], 500);
+
+        }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Task $taskchange)
-    {
-        $taskchange->update(['change_date' => now()]);
-        return response()->json(null, 204);
     }
 }

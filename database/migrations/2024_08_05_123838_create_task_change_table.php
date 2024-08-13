@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('task_change', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('task_id');
-            $table->dateTime('change_date', 0);
             $table->longText('changed_field');
-            $table->longText('changed_content');
+            $table->longText('old_value');
+            $table->longText('new_value');
             $table->timestamps();
 
             $table->foreign('task_id')->references('id')->on('task')

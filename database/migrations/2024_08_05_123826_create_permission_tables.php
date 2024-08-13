@@ -51,9 +51,11 @@ return new class extends Migration
             }
         });
 
+        // Stores the relationship between Models (as users) and the permissions that have been directly assigned to them.
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams) {
             $table->unsignedBigInteger($pivotPermission);
 
+            // Type of Model to which the permission was assigned - User?
             $table->string('model_type');
             $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_id_model_type_index');
@@ -75,9 +77,11 @@ return new class extends Migration
 
         });
 
+        // Stores the relationship between models (as users) and the roles that have been assigned to them
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames, $pivotRole, $teams) {
             $table->unsignedBigInteger($pivotRole);
 
+            // Type of Model to which the role was assigned
             $table->string('model_type');
             $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_id_model_type_index');
@@ -98,6 +102,7 @@ return new class extends Migration
             }
         });
 
+        // Stores the relationship between the roles and the permissions that were granted to them
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission) {
             $table->unsignedBigInteger($pivotPermission);
             $table->unsignedBigInteger($pivotRole);

@@ -29,17 +29,15 @@ class Role extends SpatieRole
      */
     protected $fillable = ['name', 'description'];
 
-
-    // without specifying pivot columns manually, as the Laravel Permission package already manages this.
     /*  This function defines a many-to-many relationship - Many Roles can have many Permissions */
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class);
     }
     
-    /*  This function defines a one-to-many relationship - One Role can have many Users */
-    public function users(): HasMany
+    /*  This function defines a one-to-many relationship - Role belongs to many Users */
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class);
     }
 }
