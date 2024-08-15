@@ -17,43 +17,53 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Grouping routes protected with auth:sanctum middleware
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Users routes
-    Route::group(['middleware' => ['permission:view-users']], function () {
+    Route::middleware(['permission:view-users'])->group(function () {
         Route::get('/users', [UsersController::class, 'index']);
         Route::get('/users/{id}', [UsersController::class, 'show']);
     });
-    Route::group(['middleware' => ['permission:create-users']], function () {
+    Route::group(['permission:create-users'], function () {
         Route::post('/users', [UsersController::class, 'create']);
     });
-    Route::group(['middleware' => ['permission:edit-users']], function () {
+    Route::group(['permission:edit-users'], function () {
         Route::put('/users/{id}', [UsersController::class, 'update']);
     });
-    Route::group(['middleware' => ['permission:delete-users']], function () {
+    Route::group(['permission:delete-users'], function () {
         Route::delete('/users/{id}', [UsersController::class, 'delete']);
     });
 
     // Task routes
-    Route::group(['middleware' => ['permission:view-tasks']], function () {
+    Route::group(['permission:view-tasks'], function () {
         Route::get('/tasks', [TaskController::class, 'index']);
         Route::get('/tasks/{id}', [TaskController::class, 'show']);
     });
-    Route::group(['middleware' => ['permission:create-tasks']], function () {
+    Route::group(['permission:create-tasks'], function () {
         Route::post('/tasks', [TaskController::class, 'create']);
     });
-    Route::group(['middleware' => ['permission:edit-tasks']], function () {
+    Route::group(['permission:edit-tasks'], function () {
         Route::put('/tasks/{id}', [TaskController::class, 'update']);
     });
-    Route::group(['middleware' => ['permission:delete-tasks']], function () {
+    Route::group(['permission:delete-tasks'], function () {
         Route::delete('/tasks/{id}', [TaskController::class, 'delete']);
     });
 
     // TaskChange routes
-    Route::group(['middleware' => ['permission:view-taskchanges']], function () {
+    Route::group(['permission:view-taskchanges'], function () {
         Route::get('/task_changes', [TaskChangeController::class, 'index']);
         Route::get('/task_changes/{taskChange}', [TaskChangeController::class, 'show']);
         Route::post('/task_changes', [TaskChangeController::class, 'create']);
     });
+});
+
+// Testing the middleware
+Route::middleware(['auth:sanctum'])->get('/guard-check', function (Request $request) {
+    return response()->json([
+        // Name of the guard used to authenticate the user
+        'guard' => Auth::getDefaultDriver(),
+        // User details
+        'user' => Auth::user(),
+    ]);
 });

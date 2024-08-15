@@ -2,6 +2,10 @@
 
 return [
 
+    'defaults' => [
+        'guard_name' => 'api',  // defines the default guard as 'api'
+    ],
+
     'models' => [
 
         /*

@@ -40,12 +40,12 @@ class RolesAndPermissionsSeeder extends Seeder
         // Inside the foreach loop, for each permission in the $permissions array, 
         // a record is created in the permissions table using the create method of the Permission model
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission, 'guard_name' => 'api']);
         }
 
         // Creating roles
-        $adminRole = Role::create(['name' => 'admin']);
-        $userRole = Role::create(['name' => 'user']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
+        $userRole = Role::create(['name' => 'user', 'guard_name' => 'api']);
 
         // Assign permissions to the 'admin' role
         $adminRole->givePermissionTo($permissions);

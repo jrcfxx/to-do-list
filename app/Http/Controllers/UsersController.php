@@ -54,7 +54,9 @@ class UsersController extends Controller
                 DB::beginTransaction();
                 $user = $this->user->create($request->all());
                 $role = Role::find($request->input('role_id'));
-                dd($role);
+                //dd($user->getAllPermissions($role)->pluck('name'));
+                //dd($role);
+                //dd(Auth::user()->getAllPermissions());
                 $user->assignRole($role);
                 // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
                 DB::commit();
