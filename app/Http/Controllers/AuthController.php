@@ -66,7 +66,7 @@ class AuthController extends Controller
                     //dd($user->getAllPermissions($role)->pluck('name'));
                     return response()->json(['token' => $token], 200);
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return response()->json(['message' => 'Internal Error'], 500);
             }
         }

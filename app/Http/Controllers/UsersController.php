@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class UsersController extends Controller
 {
@@ -61,7 +64,7 @@ class UsersController extends Controller
                 // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
                 DB::commit();
                 return response()->json($user, 201);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Rollback the transaction
                 DB::rollBack();
                 return response()->json(['message' => 'Internal Error'], 500);
@@ -92,7 +95,7 @@ class UsersController extends Controller
                 return response()->json($user, 200);
             } catch (ModelNotFoundException $e) {
                 return response()->json(['message' => 'Task not found'], 404);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return response()->json(['message' => 'Internal Error'], 500);
             }
         }
@@ -139,7 +142,7 @@ class UsersController extends Controller
             DB::rollBack();
             return response()->json(['message' => 'Task not found'], 404);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Internal Error'], 500);
 
@@ -179,7 +182,7 @@ class UsersController extends Controller
                 // Rollback the transaction
                 DB::rollBack();
                 return response()->json(['message' => 'User not found'], 404);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
 
                 // Rollback the transaction
                 DB::rollBack();
