@@ -7,9 +7,21 @@ use App\Models\TaskChange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class TaskController extends Controller
 {
+
+     /**
+     * TaskController constructor.
+     * Initializes the controller with Task and TaskChange model instances.
+     *
+     * @param Task $task The Task model instance.
+     * @param TaskChange $taskChange The TaskChange model instance.
+     */
+
     public function __construct(
         private Task $task,
         private TaskChange $taskChange
@@ -18,9 +30,9 @@ class TaskController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the tasks.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse The JSON response containing all tasks.
      */
     public function index()
     {
@@ -28,9 +40,11 @@ class TaskController extends Controller
     }
 
     /**
-     * Creating a new record in the database.
+     * Create a new task record in the database.
+     * Validates the input data and stores the new task.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request The HTTP request object containing task data.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the created task or error message.
      */
     public function create(Request $request)
     {
@@ -71,10 +85,11 @@ class TaskController extends Controller
 }
 
     /**
-     * Display the specified resource.
+     * Display the specified task.
+     * Retrieves and returns a single task by its ID.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id The ID of the task to retrieve.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the task data or error message.
      */
     public function show(int $id)
     {
@@ -100,11 +115,12 @@ class TaskController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified task in the database.
+     * Validates the input data and updates the task record.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request The HTTP request object containing updated task data.
+     * @param int $id The ID of the task to update.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the updated task or error message.
      */
     public function update(Request $request, int $id)
     {
@@ -170,10 +186,11 @@ class TaskController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified task from the database.
+     * Deletes the task record and logs the deletion.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id The ID of the task to delete.
+     * @return \Illuminate\Http\JsonResponse The JSON response confirming deletion or error message.
      */
     public function delete(int $id)
     {

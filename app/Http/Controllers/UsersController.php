@@ -9,18 +9,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 
 
 class UsersController extends Controller
 {
+
+    /**
+     * UsersController constructor.
+     * Initializes the controller with the User model instance.
+     *
+     * @param User $user The User model instance.
+     */
     public function __construct(private User $user) 
     {
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the users.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse The JSON response containing all users.
      */
     public function index()
     {
@@ -28,9 +36,11 @@ class UsersController extends Controller
     }
 
     /**
-     * Creating a new record in the database.
+     * Create a new user record in the database.
+     * Validates the input data and stores the new user.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request The HTTP request object containing user data.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the created user or error message.
      */
     public function create(Request $request)
     {
@@ -73,10 +83,11 @@ class UsersController extends Controller
 }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
+     * Retrieves and returns a single user by their ID.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param int $id The ID of the user to retrieve.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the user data or error message.
      */
     public function show(int $id)
     {
@@ -102,11 +113,12 @@ class UsersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user in the database.
+     * Validates the input data and updates the user record.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param Request $request The HTTP request object containing updated user data.
+     * @param int $id The ID of the user to update.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the updated user or error message.
      */
     public function update(Request $request, int $id)
     {
@@ -151,10 +163,11 @@ class UsersController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from the database.
+     * Deletes the user record.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param int $id The ID of the user to delete.
+     * @return \Illuminate\Http\JsonResponse The JSON response confirming deletion or error message.
      */
     public function delete(int $id)
     {

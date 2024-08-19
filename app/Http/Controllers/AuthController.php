@@ -12,8 +12,20 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
+
+
 class AuthController extends Controller
 {
+
+    /**
+     * AuthController constructor.
+     * Initializes the controller with User and UsersController instances.
+     *
+     * @param User $user The User model instance.
+     * @param UsersController $userController The UsersController instance.
+     */
+
+
     public function __construct(
         private User $user,
         private UsersController $userController
@@ -23,11 +35,26 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * Handles the user registration.
+     *
+     * @param Request $request The HTTP request object containing user data.
+     * @return \Illuminate\Http\JsonResponse The JSON response after attempting user creation.
+     */
+
     public function register(Request $request)
     {
         //Assigns the UsersController instance to the $userController property - available in other methods of the class
         return $this->userController->create($request);
     }
+
+    /**
+     * Handles the user login process.
+     * Validates the provided credentials and returns a token if successful.
+     *
+     * @param Request $request The HTTP request object containing login credentials.
+     * @return \Illuminate\Http\JsonResponse The JSON response with the authentication token or error message.
+     */
 
     public function login(Request $request)
     {
@@ -71,6 +98,14 @@ class AuthController extends Controller
             }
         }
 }
+
+    /**
+     * Handles the user logout process.
+     * Deletes the user's current access token, effectively logging them out.
+     *
+     * @param Request $request The HTTP request object containing user data.
+     * @return \Illuminate\Http\JsonResponse The JSON response confirming the user has been logged out.
+     */
 
     public function logout(Request $request)
     {
