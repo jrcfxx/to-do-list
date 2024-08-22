@@ -50,7 +50,6 @@ class UsersController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role_id' => 'required|exists:roles,id',
         ]);
 
         // Returns true if validation fails and false if it passes. Checks that the data provided does not meet the defined validation rules
@@ -66,7 +65,7 @@ class UsersController extends Controller
                 // All database operations after this line will be treated as a single work unit.
                 DB::beginTransaction();
                 $user = $this->user->create($request->all());
-                $role = Role::find($request->input('role_id'));
+                $role = Role::where('name', 'user')->firstOrFail();
                 //dd($user->getAllPermissions($role)->pluck('name'));
                 //dd($role);
                 //dd(Auth::user()->getAllPermissions());
@@ -131,7 +130,6 @@ class UsersController extends Controller
             // $user->id Checks if the email is unique in all records except for the record with id equal to $user->id
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|min:6',
-            'role_id' => 'sometimes|exists:roles,id',
         ]);
 
         // Returns true if validation fails and false if it passes. Checks that the data provided does not meet the defined validation rules

@@ -27,7 +27,7 @@ class Role extends SpatieRole
      *
      * @var array
      */
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'guard_name'];
 
     /*  This function defines a many-to-many relationship - Many Roles can have many Permissions */
     public function permissions(): BelongsToMany
