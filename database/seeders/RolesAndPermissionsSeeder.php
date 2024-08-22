@@ -69,9 +69,5 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($normalUsers as $user) {
             $user->assignRole($userRole);
         }
-
-        $user = User::find(4);
-        $user->assignRole('admin');
-
     }
 }

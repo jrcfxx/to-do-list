@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 
 class UsersController extends Controller
@@ -76,7 +77,13 @@ class UsersController extends Controller
             } catch (\Exception $e) {
                 // Rollback the transaction
                 DB::rollBack();
-                return response()->json(['message' => 'Internal Error'], 500);
+                return response()->json([
+                    'message' => 'Internal Error',
+                    'error' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile(),
+                    'trace' => $e->getTraceAsString(),
+                ], 500);
             }
     }
 }
@@ -101,10 +108,10 @@ class UsersController extends Controller
             return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
         } else {
             try {
-                $user = Task::findOrFail($id);
+                $user = User::findOrFail($id);
                 return response()->json($user, 200);
             } catch (ModelNotFoundException $e) {
-                return response()->json(['message' => 'Task not found'], 404);
+                return response()->json(['message' => 'User not found'], 404);
             } catch (\Exception $e) {
                 return response()->json(['message' => 'Internal Error'], 500);
             }
