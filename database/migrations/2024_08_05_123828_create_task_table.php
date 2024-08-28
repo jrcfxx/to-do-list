@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->longText('description');
             $table->integer('priority');
+            $table->string('status', 100);
             $table->dateTime('due_date', 0);
             $table->dateTime('completeness_date', 0);
             $table->dateTime('delete_date', 0);

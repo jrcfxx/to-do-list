@@ -15,11 +15,10 @@ class TaskController extends Controller
 {
 
      /**
-     * TaskController constructor.
-     * Initializes the controller with Task and TaskChange model instances.
+     * TaskChangeController constructor.
+     * Initializes the controller with the TaskChange model instance.
      *
-     * @param Task $task The Task model instance.
-     * @param TaskChange $taskChange The TaskChange model instance.
+     * @param TaskChange $taskChange TaskChange model instance.
      */
 
     public function __construct(
@@ -30,9 +29,10 @@ class TaskController extends Controller
     }
 
     /**
-     * Display a listing of the tasks.
+     * Display a listing of the TaskChanges.
+     * Fetches and returns all TaskChange records from the database.
      *
-     * @return \Illuminate\Http\JsonResponse The JSON response containing all tasks.
+     * @return \Illuminate\Http\Response JSON response containing all TaskChanges
      */
     public function index()
     {
@@ -40,11 +40,11 @@ class TaskController extends Controller
     }
 
     /**
-     * Create a new task record in the database.
-     * Validates the input data and stores the new task.
+     * Creating a new record in the database.
+     * Validates the input data and stores the new TaskChange.
      *
-     * @param Request $request The HTTP request object containing task data.
-     * @return \Illuminate\Http\JsonResponse The JSON response with the created task or error message.
+     * @param \Illuminate\Http\Request $request The incoming HTTP request containing data for the new TaskChange.
+     * @return \Illuminate\Http\JsonResponse JSON response containing the newly created TaskChange or validation errors.
      */
     public function create(Request $request)
     {
@@ -55,6 +55,7 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|integer',
+            'status' => 'required|string|max:255',
             'due_date' => 'required|date',
             'completeness_date' => 'sometimes|nullable|date',
             'delete_date' => 'sometimes|nullable|date',
@@ -85,11 +86,11 @@ class TaskController extends Controller
 }
 
     /**
-     * Display the specified task.
-     * Retrieves and returns a single task by its ID.
+     * Display the specified TaskChange.
+     * Fetches and returns a specific TaskChange record by its ID.
      *
-     * @param int $id The ID of the task to retrieve.
-     * @return \Illuminate\Http\JsonResponse The JSON response with the task data or error message.
+     * @param  int  $id The ID of the TaskChange to retrieve.
+     * @return \Illuminate\Http\Response JSON response containing the TaskChange or an error message.
      */
     public function show(int $id)
     {
@@ -115,12 +116,12 @@ class TaskController extends Controller
     }
 
     /**
-     * Update the specified task in the database.
-     * Validates the input data and updates the task record.
+     * Update the specified TaskChange in storage.
+     * Validates and updates a specific TaskChange record by its ID.
      *
-     * @param Request $request The HTTP request object containing updated task data.
-     * @param int $id The ID of the task to update.
-     * @return \Illuminate\Http\JsonResponse The JSON response with the updated task or error message.
+     * @param  \Illuminate\Http\Request  $request The incoming HTTP request containing updated data for the TaskChange.
+     * @param  int  $id The ID of the TaskChange to update.
+     * @return \Illuminate\Http\Response JSON response containing the updated TaskChange or an error message.
      */
     public function update(Request $request, int $id)
     {
@@ -131,6 +132,7 @@ class TaskController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
             'priority' => 'sometimes|required|integer',
+            'status' => 'required|string|max:255',
             'due_date' => 'sometimes|required|date',
             'completeness_date' => 'nullable|date',
             'delete_date' => 'nullable|date',

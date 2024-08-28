@@ -12,14 +12,22 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class TaskChangeController extends Controller
 {
 
+    /**
+     * TaskChangeController constructor.
+     * Initializes the controller with the TaskChange model instance.
+     *
+     * @param TaskChange $taskChange TaskChange model instance.
+     */
+
     public function __construct(private TaskChange $taskChange) 
     {
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the TaskChanges.
+     * Fetches and returns all TaskChange records from the database.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response JSON response containing all TaskChanges.
      */
     public function index()
     {
@@ -27,9 +35,11 @@ class TaskChangeController extends Controller
     }
 
     /**
-     * Creating a new record in the database.
+     * Create a new TaskChange record in the database.
+     * Validates the input data and stores the new TaskChange.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request The incoming HTTP request containing data for the new TaskChange.
+     * @return \Illuminate\Http\Response JSON response containing the newly created TaskChange or validation errors.
      */
     public function create(Request $request)
     {
@@ -66,10 +76,11 @@ class TaskChangeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified TaskChange.
+     * Fetches and returns a specific TaskChange record by its ID.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id The ID of the TaskChange to retrieve.
+     * @return \Illuminate\Http\Response JSON response containing the TaskChange or an error message.
      */
     public function show(int $id)
     {
@@ -95,11 +106,12 @@ class TaskChangeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified TaskChange in the database.
+     * Validates and updates a specific TaskChange record by its ID.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request The incoming HTTP request containing updated data for the TaskChange.
+     * @param int $id The ID of the TaskChange to update.
+     * @return \Illuminate\Http\Response JSON response containing the updated TaskChange or an error message.
      */
     public function update(Request $request, int $id)
     {
