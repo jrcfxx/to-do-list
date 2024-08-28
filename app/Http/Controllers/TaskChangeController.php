@@ -61,9 +61,7 @@ class TaskChangeController extends Controller
             return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
         } else {
             try {
-                // All database operations after this line will be treated as a single work unit.
-                DB::beginTransaction();
-                $taskChange = $this->$taskChange->create($request->all());
+                $taskChange = $this->taskChange->create($request->all());
                 // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
                 DB::commit();
                 return response()->json($taskChange,201);
@@ -96,7 +94,7 @@ class TaskChangeController extends Controller
         } else {
             try {
                 $taskChange = Task::findOrFail($id);
-                return response()->json($task, 200);
+                return response()->json($taskChange, 200);
             } catch (ModelNotFoundException $e) {
                 return response()->json(['message' => 'TaskChange not found'], 404);
             } catch (\Exception $e) {
@@ -125,7 +123,6 @@ class TaskChangeController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
         } else {
-            DB::beginTransaction();
         try {
             $taskChange = Task::findOrFail($id);
             $taskChange->update($request->all());

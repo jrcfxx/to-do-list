@@ -146,9 +146,10 @@ class UsersController extends Controller
             // errors() returns an associative array with fields that failed validation and their error messages.
             return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
         } else {
+        try {
             // All database operations after this line will be treated as a single work unit.
             DB::beginTransaction();
-        try {
+
             $user = User::findOrFail($id);
             $user->update($request->all());
 
@@ -184,9 +185,6 @@ class UsersController extends Controller
             return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
         } else {
             try {
-                // All database operations after this line will be treated as a single work unit.
-                DB::beginTransaction();
-
                 // Searches the task by ID. If it is not found, throws a ModelNotFoundException exception.
                 $user = $this->user->findOrFail($id);
                 $user->delete();

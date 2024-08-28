@@ -71,8 +71,6 @@ class TaskController extends Controller
 
         } else {
             try {
-                // All database operations after this line will be treated as a single work unit.
-                DB::beginTransaction();
                 $task = $this->task->create($request->all());
                 // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
                 DB::commit();
@@ -145,9 +143,10 @@ class TaskController extends Controller
             // errors() returns an associative array with fields that failed validation and their error messages.
             return response()->json(['error' => 'Bad Request', 'messages' => $validator->errors()], 400);
         } else {
+        try {
             // All database operations after this line will be treated as a single work unit.
             DB::beginTransaction();
-        try {
+            
             $task = Task::findOrFail($id);
             // The Eloquent getOriginal() method returns the values of attributes before any update.
             $originalTask = $task->getOriginal();
