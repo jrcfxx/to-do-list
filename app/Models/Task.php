@@ -29,6 +29,7 @@ class Task extends Model
         'title',
         'description',
         'priority',
+        'status',
         'due_date',
         'completeness_date',
         'delete_date',
@@ -41,7 +42,7 @@ class Task extends Model
     }
 
     /*  This function defines that a Task is associated with one specific User  */
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
