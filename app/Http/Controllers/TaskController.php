@@ -15,9 +15,10 @@ class TaskController extends Controller
 {
 
      /**
-     * TaskChangeController constructor.
-     * Initializes the controller with the TaskChange model instance.
+     * TaskController constructor.
+     * Initializes the controller with the Task and TaskChange model instances.
      *
+     * @param Task $task Task model instance.
      * @param TaskChange $taskChange TaskChange model instance.
      */
 
@@ -29,10 +30,10 @@ class TaskController extends Controller
     }
 
     /**
-     * Display a listing of the TaskChanges.
-     * Fetches and returns all TaskChange records from the database.
+     * Display a listing of the Tasks.
+     * Fetches and returns all Task records from the database.
      *
-     * @return \Illuminate\Http\Response JSON response containing all TaskChanges
+     * @return \Illuminate\Http\Response JSON response containing all Tasks.
      */
     public function index()
     {
@@ -40,11 +41,11 @@ class TaskController extends Controller
     }
 
     /**
-     * Creating a new record in the database.
-     * Validates the input data and stores the new TaskChange.
+     * Create a new Task record in the database.
+     * Validates the input data and creates the new Task.
      *
-     * @param \Illuminate\Http\Request $request The incoming HTTP request containing data for the new TaskChange.
-     * @return \Illuminate\Http\JsonResponse JSON response containing the newly created TaskChange or validation errors.
+     * @param \Illuminate\Http\Request $request The incoming HTTP request containing data for the new Task.
+     * @return \Illuminate\Http\JsonResponse JSON response containing the newly created Task or validation errors.
      */
     public function create(Request $request)
     {
@@ -84,11 +85,11 @@ class TaskController extends Controller
 }
 
     /**
-     * Display the specified TaskChange.
-     * Fetches and returns a specific TaskChange record by its ID.
+     * Display the specified Task.
+     * Fetches and returns a specific Task record by its ID.
      *
-     * @param  int  $id The ID of the TaskChange to retrieve.
-     * @return \Illuminate\Http\Response JSON response containing the TaskChange or an error message.
+     * @param  int  $id The ID of the Task to retrieve.
+     * @return \Illuminate\Http\Response JSON response containing the Task or an error message.
      */
     public function show(int $id)
     {
@@ -114,12 +115,12 @@ class TaskController extends Controller
     }
 
     /**
-     * Update the specified TaskChange in storage.
-     * Validates and updates a specific TaskChange record by its ID.
+     * Update the specified Task in storage.
+     * Validates and updates a specific Task record by its ID.
      *
-     * @param  \Illuminate\Http\Request  $request The incoming HTTP request containing updated data for the TaskChange.
-     * @param  int  $id The ID of the TaskChange to update.
-     * @return \Illuminate\Http\Response JSON response containing the updated TaskChange or an error message.
+     * @param  \Illuminate\Http\Request  $request The incoming HTTP request containing updated data for the Task.
+     * @param  int  $id The ID of the Task to update.
+     * @return \Illuminate\Http\Response JSON response containing the updated Task or an error message.
      */
     public function update(Request $request, int $id)
     {
