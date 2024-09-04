@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 
 class TaskController extends Controller
@@ -35,9 +36,15 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response JSON response containing all Tasks.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Task::all();
+        // Get the authenticated user
+        $user = $request->user();
+
+        // Filters the tasks by user_id
+        $tasks = Task::where('user_id', $user->id)->get();
+
+        return response()->json($tasks, 200);
     }
 
     /**
@@ -49,10 +56,12 @@ class TaskController extends Controller
      */
     public function create(Request $request)
     {
+
+        $userId = $request->user()->id;
+
         // Validator::make(): Laravel Facade Validator static method - creating a new validator.
         // Creates a new instance of a validator for the request data
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|integer',
@@ -72,7 +81,14 @@ class TaskController extends Controller
 
         } else {
             try {
-                $task = $this->task->create($request->all());
+                DB::beginTransaction();
+
+                // Creates the new task with the merged data - adding the user_id automatically
+                $task = $this->task->create(array_merge(
+                    $request->all(),
+                    ['user_id' => $userId]
+                ));
+
                 // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
                 DB::commit();
                 return response()->json($task, 201);
@@ -127,7 +143,6 @@ class TaskController extends Controller
         // Validator::make(): Laravel Facade Validator static method - creating a new validator.
         // Creates a new instance of a validator for the request data
         $validator = Validator::make($request->all(), [
-            'user_id' => 'sometimes|required|integer|exists:users,id',
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
             'priority' => 'sometimes|required|integer',

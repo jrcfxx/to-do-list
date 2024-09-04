@@ -19,8 +19,8 @@ return new class extends Migration
             $table->integer('priority');
             $table->string('status', 100);
             $table->dateTime('due_date', 0);
-            $table->dateTime('completeness_date', 0);
-            $table->dateTime('delete_date', 0);
+            $table->dateTime('completeness_date', 0)->nullable();
+            $table->dateTime('delete_date', 0)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')
