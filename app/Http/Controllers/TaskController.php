@@ -177,7 +177,7 @@ class TaskController extends Controller
             // The loop allows to process each change individually, capturing both the field name ($field) and the new value of that field ($newValue).
             foreach ($changes as $field => $newValue) {
                 // $originalTask[$field]: returns the value that this field had before updating
-                $oldValue = $originalTask[$field] ?? null; // Ensures that the old value is null if it does not exist
+                $oldValue = $originalTask[$field] ?? ''; // Ensures that the old value is empty if it does not exist
                 $this->taskChange->create([
                     'task_id' => $task->id,
                     'changed_field' => $field,
@@ -237,7 +237,7 @@ class TaskController extends Controller
                 // If all these operations are successful, DB::commit() to confirm the transaction. If any error occurs, the execution passes to catch blocks.
                 DB::commit();
     
-                return response()->json(['message' => 'Task deleted'], 204);
+                return response()->json(['message' => 'Task deleted'], 200);
             } catch (ModelNotFoundException $e) {
 
                 // Rollback the transaction

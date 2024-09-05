@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('task_id');
             $table->longText('changed_field');
-            $table->longText('old_value');
+            $table->longText('old_value')->nullable();
             $table->longText('new_value');
             $table->timestamps();
 
