@@ -140,6 +140,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, int $id)
     {
+        $messages = [
+            'completeness_date.before_or_equal' => 'The completeness date cannot be in the future.',
+        ];
+
         // Validator::make(): Laravel Facade Validator static method - creating a new validator.
         // Creates a new instance of a validator for the request data
         $validator = Validator::make($request->all(), [
@@ -148,9 +152,9 @@ class TaskController extends Controller
             'priority' => 'sometimes|required|integer',
             'status' => 'required|string|max:255',
             'due_date' => 'sometimes|required|date',
-            'completeness_date' => 'nullable|date',
+            'completeness_date' => 'nullable|date|before_or_equal:today', // Ensure that the completion date is not future
             'delete_date' => 'nullable|date',
-        ]);
+        ], $messages);
 
         // Returns true if validation fails and false if it passes. Checks that the data provided does not meet the defined validation rules
         if ($validator->fails()) {
