@@ -91,8 +91,9 @@ class AuthController extends Controller
 
                     //$role = Role::find($request->input('role_id'));
                     //dd($user->getAllPermissions($role)->pluck('name'));
-                    return response()->json(['token' => $token], 200);
-                }
+                    return response()->json(['message' => 'Login successful'])
+                    ->cookie('authToken', $token, 60 * 24, null, null, true, true); // HttpOnly e Secure flag
+            }
             } catch (\Exception $e) {
                 return response()->json(['message' => 'Internal Error'], 500);
             }

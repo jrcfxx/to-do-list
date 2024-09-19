@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\Cors;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,8 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            //'cors' => \Illuminate\Http\Middleware\HandleCors::class,
         ]);
         $middleware->redirectGuestsTo(fn (Request $request) => response()->json(['message' => 'Unauthorized'], 401));
+        $middleware->use([\Illuminate\Http\Middleware\HandleCors::class]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
