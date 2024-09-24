@@ -17,19 +17,28 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['POST, GET, OPTIONS, PUT, DELETE'],
+    'allowed_methods' => ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE'],
 
     'allowed_origins' => ['http://localhost:3000'],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['Origin, Content-Type, '
-            . 'Authorization, Content-Length, X-Requested-With, Host, '
-            . 'Accept-Encoding, Referer, Accept, Content-Disposition, '
-            . 'Content-Range, Content-Disposition, Content-Description, '
-            . 'Accept-Language'],
+    'allowed_headers' => [
+    'Origin', 
+    'Content-Type', 
+    'Authorization', 
+    'Content-Length', 
+    'X-Requested-With', 
+    'Host', 
+    'Accept-Encoding', 
+    'Referer', 
+    'Accept', 
+    'Content-Disposition', 
+    'Content-Range', 
+    'Accept-Language'
+    ],
 
-    'exposed_headers' => ['Authorization'],
+    'exposed_headers' => ['Authorization', 'Set-Cookie'],
 
     'max_age' => 0,
 
