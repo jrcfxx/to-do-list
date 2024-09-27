@@ -46,6 +46,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Creating roles
         $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
         $userRole = Role::create(['name' => 'user', 'guard_name' => 'api']);
+        $testRole = Role::create(['name' => 'test', 'guard_name' => 'api']);
 
         // Assign permissions to the 'admin' role
         $adminRole->givePermissionTo($permissions);
@@ -69,5 +70,6 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($normalUsers as $user) {
             $user->assignRole($userRole);
         }
+        
     }
 }

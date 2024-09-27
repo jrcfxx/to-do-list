@@ -22,6 +22,14 @@ class DatabaseSeeder extends Seeder
             
         ]);
 
+        $user = User::find(7);
+
+        if ($user) {
+            $user->assignRole('test');
+        }
+
+
+
         // User::factory(10)->create();
 
         /*User::factory()->create([

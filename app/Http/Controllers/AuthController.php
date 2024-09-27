@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\HasApiTokens;
 
 
 
@@ -73,9 +74,10 @@ class AuthController extends Controller
 
         } else {
             try {
+                
                 // Search for a user in the database whose email address matches the one provided in the request.
                 $user = User::where('email', $request->email)->first();
-
+                
                 // Check if the user was found and if the provided password matches the stored password.
                 if (! $user || ! Hash::check($request->password, $user->password)) {
                     // Returns a JSON response with an error message and HTTP 401 (Unauthorized) status
@@ -86,15 +88,24 @@ class AuthController extends Controller
                     // 'plainTextToken' is the generated token in plain text.
                     $token = $user->createToken('authToken')->plainTextToken;
 
-                    //$permissions = $user->getAllPermissions(); // get all user permissions
-                    //dump($permissions); // showing the permissions without interrupting the execution
+                    // Autenthication cookie (HTTP Only, Secure)
+                    $secureFlag = env('APP_ENV') !== 'local';
 
-                    //$role = Role::find($request->input('role_id'));
-                    //dd($user->getAllPermissions($role)->pluck('name'));
-                    return response()->json(['message' => 'Login successful'])
-                    ->cookie('authToken', $token, 60 * 24, null, null, true, true); // HttpOnly e Secure flag
-            }
+                    //dd(Permission::all());
+
+                    //dd(Role::with('permissions')->latest('id')->get());
+                    //dd($user->getPermissionNames());
+                    $roles = Role::with('permissions')->whereIn('name', $user->getRoleNames())->get();
+                    $permissions = [];
+                    foreach ($roles as $role) {
+                        $permissions = collect($permissions)->merge($role->permissions()->pluck('name'));
+                    }  
+                    
+
+                    return response()->json(['message' => 'Login successful', 'roles' => $user->getRoleNames(), 'permissions' => $permissions, 'token' => $token ]);
+                }
             } catch (\Exception $e) {
+                //dd($e);
                 return response()->json(['message' => 'Internal Error'], 500);
             }
         }
@@ -108,15 +119,15 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse The JSON response confirming the user has been logged out.
      */
 
-    public function logout(Request $request)
-    {
-
-        // Deletes the user's current access token, logging them out.
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
-    }
-
-}
+     public function logout(Request $request)
+     {
+ 
+         // Deletes the user's current access token, logging them out.
+         $request->user()->currentAccessToken()->delete();
+ 
+         return response()->json([
+             'message' => 'Successfully logged out'
+         ]);
+     }
+ 
+ }
